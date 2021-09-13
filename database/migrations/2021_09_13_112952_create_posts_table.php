@@ -18,9 +18,10 @@ class CreatePostsTable extends Migration
             $table->id();
             $table->string('title');
             $table->text('content')->nullable();
-            $table->json('settings')->nullable();
+            $table->boolean('is_archived')->default(false);
             $table->foreignIdFor(User::class)->constrained()->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
