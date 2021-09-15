@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
- * @property string $id
+ * @property integer $id
  * @property string $name
  * @property string $email
  * @property string $password

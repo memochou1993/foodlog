@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
 /**
- * @property string $id
+ * @property integer $id
  * @property string $title
  * @property string $content
  * @property boolean $is_archived
@@ -19,4 +19,24 @@ use Illuminate\Support\Carbon;
 class Post extends Model
 {
     use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var string[]
+     */
+    protected $fillable = [
+        'title',
+        'content',
+        'is_archived',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'is_archived' => 'boolean',
+    ];
 }

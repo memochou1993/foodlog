@@ -3,13 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PostShowRequest;
+use App\Http\Requests\PostStoreRequest;
+use App\Http\Requests\PostUpdateRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
-use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Symfony\Component\HttpFoundation\Response;
 
 class PostController extends Controller
 {
+    /**
+     * Instantiate a new controller instance.
+     */
+    public function __construct() {
+        $this->authorizeResource(Post::class);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -27,12 +38,17 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param PostStoreRequest $request
+     * @return PostResource
      */
-    public function store(Request $request)
+    public function store(PostStoreRequest $request): PostResource
     {
-        //
+        /** @var User $user */
+        $user = $request->user();
+
+        $post = $user->posts()->create($request->all());
+
+        return new PostResource($post);
     }
 
     /**
@@ -50,23 +66,27 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param PostUpdateRequest $request
      * @param Post $post
-     * @return \Illuminate\Http\Response
+     * @return PostResource
      */
-    public function update(Request $request, Post $post)
+    public function update(PostUpdateRequest $request, Post $post): PostResource
     {
-        //
+        $post->update($request->all());
+
+        return new PostResource($post);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param Post $post
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function destroy(Post $post)
+    public function destroy(Post $post): JsonResponse
     {
-        //
+        $post->delete();
+
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }

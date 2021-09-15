@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PostShowRequest extends FormRequest
+class PostStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,12 @@ class PostShowRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title' => [
+                'required',
+            ],
+            'is_archived' => [
+                'boolean',
+            ],
         ];
     }
 }
