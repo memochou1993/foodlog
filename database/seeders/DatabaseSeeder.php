@@ -19,22 +19,8 @@ class DatabaseSeeder extends Seeder
     {
         User::query()->create([
             'name' => 'user',
-            'email' => 'user@email.com',
+            'email' => 'user@example.com',
             'password' => 'password',
         ]);
-
-        $users = User::factory()->count(5)->create();
-
-        $users->each(function ($user) {
-            Post::factory()
-                ->count(10)
-                ->state(new Sequence(
-                    ['is_archived' => true],
-                    ['is_archived' => false],
-                ))
-                ->create([
-                'user_id' => $user->id,
-            ]);
-        });
     }
 }
