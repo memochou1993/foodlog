@@ -10,6 +10,8 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class PostController extends Controller
@@ -46,7 +48,13 @@ class PostController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        $post = $user->posts()->create($request->all());
+        collect($request->file('files'))->each(function (UploadedFile $file) {
+            $key = Str::uuid()->getHex();
+            $ext = $file->extension();
+            $file->store("$key.$ext");
+        });
+
+        $post = $user->posts()->create($request->input());
 
         return new PostResource($post);
     }
@@ -72,7 +80,7 @@ class PostController extends Controller
      */
     public function update(PostUpdateRequest $request, Post $post): PostResource
     {
-        $post->update($request->all());
+        $post->update($request->input());
 
         return new PostResource($post);
     }
